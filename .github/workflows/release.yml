@@ -42,18 +42,16 @@ jobs:
         run: |
           pnpm package:server
 
-      - name: Stage Artifacts & Checksums
+      - name: Stage Executable Binaries & Checksums
         run: |
-          mkdir -p dist
-          cp release/* dist/ 2>/dev/null || true
-          cd dist
-          if [ -n "$(ls -A .)" ]; then
-            sha256sum * > SHA256SUMS.txt
-            cat SHA256SUMS.txt
-          fi
+          mkdir -p packaged-binaries
+          cp -v release/* packaged-binaries/
+          cd packaged-binaries
+          sha256sum * > SHA256SUMS.txt
+          cat SHA256SUMS.txt
 
       - name: Publish GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          files: dist/*
+          files: packaged-binaries/*
           generate_release_notes: true
