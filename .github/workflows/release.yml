@@ -1,0 +1,59 @@
+name: Release Node.js Server
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-package:
+    name: Build & Package Binaries
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9.15.5
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build TypeScript Packages
+        run: pnpm build
+
+      - name: Run Test Suites
+        run: pnpm test
+
+      - name: Package Standalone Server Binaries
+        run: |
+          pnpm package:server
+
+      - name: Stage Artifacts & Checksums
+        run: |
+          mkdir -p dist
+          cp release/* dist/ 2>/dev/null || true
+          cd dist
+          if [ -n "$(ls -A .)" ]; then
+            sha256sum * > SHA256SUMS.txt
+            cat SHA256SUMS.txt
+          fi
+
+      - name: Publish GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/*
+          generate_release_notes: true
