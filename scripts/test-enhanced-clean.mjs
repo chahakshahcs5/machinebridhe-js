@@ -34,5 +34,5 @@ function enhancedCleanTerminalOutput(raw) {
 }
 
 console.log('Testing enhancedCleanTerminalOutput:');
-const sample = "\u001b[0m\u001b[0KWindows PowerShell\u001b[0K\u001b[?25l\r\nCopyright (C) Microsoft Corporation. All rights reserved.\u001b[0K\r\n\u001b[0K\r\n\u001b[0K\u001b[?25hPS C:\\Users\\chaha\\Projects\\machinebridge>\u001b[0K\u001b[43G\u001b[?25l\rPS C:\\Users\\chaha\\Projects\\machinebridge> \u001b[0;33;93mG\u001b[0m\u001b[0K\u001b[?25h\u001b[0;33;93met-Date\u001b[0m\u001b[0K\u001b[?25l\r\n\u001b[0K\u001b[?25h\u001b[?25l\r\n07 September 2026 22:00:26";
+const sample = "\u001b[0m\u001b[0KWindows PowerShell\u001b[0K\u001b[?25l\r\nCopyright (C) Microsoft Corporation. All rights reserved.\u001b[0K\r\n\u001b[0K\r\n\u001b[0K\u001b[?25hPS C:\\Users\\developer\\Projects\\machinebridge>\u001b[0K\u001b[43G\u001b[?25l\rPS C:\\Users\\developer\\Projects\\machinebridge> \u001b[0;33;93mG\u001b[0m\u001b[0K\u001b[?25h\u001b[0;33;93met-Date\u001b[0m\u001b[0K\u001b[?25l\r\n\u001b[0K\u001b[?25h\u001b[?25l\r\n07 September 2026 22:00:26";
 console.log(enhancedCleanTerminalOutput(sample));
