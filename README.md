@@ -4,31 +4,31 @@ TypeScript / Node.js implementation and companion SDK for **MachineBridge**, the
 
 > **Note**: The primary, canonical high-performance engine for MachineBridge is the native C++20 implementation at [**machinebridge-cpp**](../machinebridge-cpp). This project provides the modular TypeScript/Node.js ecosystem implementation.
 
-```text
-AI Client / MCP Host / HTTP Client / Browser
-      │
-      ├── MCP Stdio transport (--stdio)
-      ├── MCP SSE transport (GET /sse, POST /messages)
-      ├── REST Tool execution (GET/POST /tools/:name, /v1/tools/:name)
-      ├── REST Command execution (/v1/terminal/execute)
-      ├── REST Filesystem API (/v1/fs/read, /v1/fs/write, /v1/fs/batch...)
-      └── Interactive Raw Terminal (WSS /v1/terminal/sessions/:id)
-      │
-      ▼
-┌─────────────────────────────────────────────────────────────┐
-│                 MachineBridge Unified Server                │
-│                                                             │
-│  [Auth Hook: X-API-Key]  ───  [In-Memory Session Store]     │
-│  [Command Executor]      ───  [Direct PTY Process Manager]  │
-│  [Filesystem Manager]    ───  [MCP Server & Dispatcher]     │
-└─────────────────────────────────────────────────────────────┘
-      │                                    │
-      ▼                                    ▼
- Real Interactive PTY (node-pty)      Host Filesystem
- (Powershell / CMD / Bash / Zsh)      (Secure Traversal Guards)
-      │
- Process Tree Cleanup Hook
- (taskkill /F /T or SIGKILL groups)
+```mermaid
+flowchart TD
+    Client["AI Client / MCP Host / HTTP Client / Browser"]
+
+    Client -->|"MCP Stdio (--stdio)"| Server
+    Client -->|"MCP SSE (GET /sse, POST /messages)"| Server
+    Client -->|"REST Tool Execution (/v1/tools/:name)"| Server
+    Client -->|"REST Command Execution (/v1/terminal/execute)"| Server
+    Client -->|"REST Filesystem API (/v1/fs/*)"| Server
+    Client -->|"Interactive Terminal (WSS /v1/terminal/sessions/:id)"| Server
+
+    subgraph Server["MachineBridge Unified Server (Fastify)"]
+        direction TB
+        Auth["Auth Hook: Timing-Safe X-API-Key"]
+        Sessions["In-Memory Session Store"]
+        Executor["Command Executor"]
+        PTYMgr["Direct PTY Process Manager"]
+        FSMgr["Filesystem Manager"]
+        MCP["MCP Server & Dispatcher"]
+    end
+
+    Server -->|"Interactive Shell"| PTY["Real Interactive PTY (node-pty)<br/>PowerShell / CMD / Bash / Zsh"]
+    Server -->|"File Operations"| FS["Host Filesystem<br/>Secure Traversal Guards"]
+
+    PTY --> Cleanup["Process Tree Cleanup Hook<br/>taskkill /F /T or SIGKILL groups"]
 ```
 
 The core design principle: **MachineBridge provides a real PTY terminal and host filesystem manager, not a collection of ad-hoc command wrappers.** An AI agent or client can run Git, Node, Python, Docker, compilers, and complex workflows naturally.

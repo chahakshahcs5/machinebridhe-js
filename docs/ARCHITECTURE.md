@@ -6,28 +6,29 @@ This document outlines the architecture for the **MachineBridge** TypeScript/Nod
 
 > **Canonical Engine**: For the high-performance native C++20 core engine, see `machinebridge-cpp`.
 
-```text
-  MCP Client (Claude / Cursor)         HTTP Client / AI Agent / Browser
-               │                                      │
-               │ Stdio / SSE                          │ REST / WebSocket
-               ▼                                      ▼
-┌────────────────────────────────────────────────────────────────────────┐
-│                      MachineBridge Unified Server                      │
-│                                                                        │
-│   Fastify HTTP App  ───  Timing-Safe API Key Auth Hook (X-API-Key)     │
-│   MCP Server        ───  Tool Router & Dispatcher                      │
-│   WebSocket Server  ───  Raw Terminal Interactive Streaming            │
-│   In-Memory Sessions───  Active Session Lifecycle & Buffer Store       │
-│   Command Executor  ───  PTY Execution Engine & Exit Code Matcher      │
-└────────────────────────────────────────────────────────────────────────┘
-              │                                      │
-              ▼                                      ▼
-       @machinebridge/pty                     @machinebridge/fs
-    (node-pty + Process Tree Kill)         (Path Confinement & Guards)
-              │                                      │
-              ▼                                      ▼
-    Interactive OS Shell (PTY)                 Host Filesystem
-    (PowerShell / CMD / Bash / Zsh)
+```mermaid
+flowchart TD
+    Client1["MCP Client<br/>(Claude Desktop / Cursor)"]
+    Client2["HTTP Client / AI Agent / Browser"]
+
+    Client1 -->|"Stdio / SSE"| Server
+    Client2 -->|"REST / WebSocket"| Server
+
+    subgraph Server["MachineBridge Unified Node.js Server"]
+        direction TB
+        HTTP["Fastify HTTP Application"]
+        Auth["Timing-Safe API Key Auth Hook (X-API-Key)"]
+        MCP["MCP Server: Tool Router & Dispatcher"]
+        WS["WebSocket Server: Terminal Streaming"]
+        Sessions["In-Memory Sessions: Lifecycle & Buffers"]
+        Exec["Command Executor: Exit Code Matcher"]
+    end
+
+    Server -->|"Execute Shell"| PTYPkg["@machinebridge/pty<br/>(node-pty + Process Tree Kill)"]
+    Server -->|"Filesystem Operations"| FSPkg["@machinebridge/fs<br/>(Path Confinement & Guards)"]
+
+    PTYPkg --> Shell["Interactive OS Shell (PTY)<br/>(PowerShell / CMD / Bash / Zsh)"]
+    FSPkg --> HostFS["Host Filesystem"]
 ```
 
 ---
