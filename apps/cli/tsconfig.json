@@ -1,0 +1,15 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "composite": true,
+    "outDir": "dist",
+    "rootDir": "src",
+    "declaration": true
+  },
+  "references": [
+    { "path": "../../packages/crypto" },
+    { "path": "../../packages/shared" },
+    { "path": "../../packages/config" }
+  ],
+  "include": ["src"]
+}

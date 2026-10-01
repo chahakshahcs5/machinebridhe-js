@@ -1,0 +1,18 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "composite": true,
+    "outDir": "dist",
+    "rootDir": "src",
+    "declaration": true
+  },
+  "references": [
+    { "path": "../../packages/protocol" },
+    { "path": "../../packages/shared" },
+    { "path": "../../packages/config" },
+    { "path": "../../packages/pty" },
+    { "path": "../../packages/fs" },
+    { "path": "../../packages/tunnel" }
+  ],
+  "include": ["src"]
+}

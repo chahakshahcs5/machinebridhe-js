@@ -1,0 +1,19 @@
+{
+  "name": "@machinebridge/cli",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "bin": {
+    "machinebridge": "dist/main.js"
+  },
+  "dependencies": {
+    "@machinebridge/config": "workspace:*",
+    "@machinebridge/crypto": "workspace:*",
+    "@machinebridge/shared": "workspace:*",
+    "ws": "^8.18.0"
+  },
+  "scripts": {
+    "dev": "tsx src/main.ts",
+    "build": "tsc -p tsconfig.json"
+  }
+}

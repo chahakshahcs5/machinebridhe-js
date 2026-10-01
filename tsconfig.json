@@ -1,0 +1,27 @@
+{
+  "files": [],
+  "references": [
+    { "path": "packages/protocol" },
+    { "path": "packages/crypto" },
+    { "path": "packages/shared" },
+    { "path": "packages/config" },
+    { "path": "packages/pty" },
+    { "path": "packages/fs" },
+    { "path": "packages/tunnel" },
+    { "path": "apps/server" },
+    { "path": "apps/cli" }
+  ],
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "noImplicitOverride": true,
+    "resolveJsonModule": true,
+    "declaration": true,
+    "sourceMap": true
+  }
+}
